@@ -1,0 +1,53 @@
+<!-- Horizontal split: Top half (Upload + Preview), Bottom half (Prompt + Chat) -->
+<div id="main-split" class="split split-vertical">
+  <!-- TOP: Upload + Preview -->
+  <div id="top-split" class="split split-horizontal">
+    <div class="grid-panel upload">
+      <h3>Upload</h3>
+      <input type="file" (change)="onFileSelected($event)" />
+      <button (click)="uploadFile()" [disabled]="isUploading">
+        {{ isUploading ? "Uploading..." : "Upload & Chunk" }}
+      </button>
+
+       <ul>
+    <li *ngFor="let step of uploadSteps"> {{ step }}</li>
+  </ul>
+    </div>
+
+   <div class="grid-panel preview">
+  <h3>Chunk Preview (Last 5)</h3>
+  <pre *ngIf="chunkPreview?.length">
+{{ chunkPreview | json }}
+  </pre>
+  <p *ngIf="!chunkPreview || !chunkPreview.length">No chunks yet.</p>
+</div>
+  </div>
+
+  <!-- BOTTOM: Prompt + Chat -->
+  <div id="bottom-split" class="split split-horizontal">
+    <div class="grid-panel prompt">
+      <h3>Prompt Viewer</h3>
+      <pre>{{ generatedPrompt }}</pre>
+    </div>
+
+    <div class="grid-panel chat">
+   <div class="chat-header">
+  <h3 class="chat-title">Chat</h3>
+  <button class="clear-btn" (click)="clearChat()">Clear Chat</button>
+</div>
+      <div class="chat-box">
+        <div *ngFor="let msg of chatHistory">
+          <div class="chat-message user">
+            {{ msg.user }}
+          </div>
+          <div class="chat-message ai">{{ msg.ai }}</div>
+        </div>
+      </div>
+
+      <div class="chat-input-container">
+        <input [(ngModel)]="userQuery" placeholder="Ask something..." />
+        <button (click)="sendQuery()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
